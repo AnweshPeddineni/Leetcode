@@ -1,22 +1,18 @@
 class Solution {
-    public int maxSubArray(int[] nums) {      
-        if(nums.length == 1) return nums[0];
+    public int maxSubArray(int[] nums) {
         
-        int max = Integer.MIN_VALUE;
-        int sum = 0;
+        int n = nums.length;
+        int currentSum = nums[0];
+        int maxSum = nums[0];
         
-        for(int n: nums){
-            // Add the current element to the running sum.
-            sum += n;
-            max = Math.max(max, sum);
- // If the running sum becomes negative, reset it to 0.
- // This is the greedy step, deciding to potentially start a new subarray from the next element.
-            if(sum < 0){
-                sum = 0;
-            }
+        for(int i=1; i<n; i++){
+            //dp logic
+            currentSum = Math.max(nums[i], currentSum+nums[i]);
+            maxSum = Math.max(maxSum, currentSum);
         }
-        return max;
+        
+        return maxSum;
     }
 }
 
-
+// DP approach

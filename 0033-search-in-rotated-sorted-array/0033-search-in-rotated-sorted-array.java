@@ -1,36 +1,41 @@
 class Solution {
     public int search(int[] nums, int target) {
-       
-        int l = 0;
-        int r = nums.length - 1;
-        
-        
-        while (l <= r) {
-            int mid = (l + r) / 2;
-            if (nums[mid] == target) {
-                return mid; // Target found
-            }
-
-            // Determine if the left half of the array is sorted
-            if (nums[l] <= nums[mid]) {
-                // If target is within the range of the left sorted half, narrow the search to the left
-                if (target >= nums[l] && target < nums[mid]) {
-                    r = mid - 1;
-                } else {
-                    // Otherwise, search in the right half
-                    l = mid + 1;
-                }
+        //step1 - finding pivot
+        int left = 0;
+        int right = nums.length - 1;
+        int mid = 0;
+        while(left < right){
+            mid = (left + right)/2;
+            if(nums[mid] > nums[right]){
+                left = mid + 1;
             } else {
-                if (target > nums[mid] && target <= nums[r]) {
-                    l = mid + 1;
-                } else {
-                    // Otherwise, search in the left half
-                    r = mid - 1;
-                }
+                right = mid;
             }
         }
         
-        // Target not found in the array
+        //step-2 finding in which of the sorted array should I search
+        int start = left;
+        left = 0;
+        right = nums.length - 1;
+        
+        if(nums[start] <= target && nums[right] >= target){
+            left = start;
+        } else{
+            right = start-1;
+        }
+        
+        //Step-3
+        while(left <= right){
+            mid = (left + right)/2;
+            if(nums[mid] > target){
+                right = mid - 1;;
+            } else if(nums[mid] < target){
+                left = mid + 1;
+            } else {
+                return mid;
+            }
+        }
+        
         return -1;
     }
 }

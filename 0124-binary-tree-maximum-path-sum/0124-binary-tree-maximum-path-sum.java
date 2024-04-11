@@ -29,7 +29,6 @@ class Solution {
         
         if(node == null) return 0;
         
-        int nodeValue = node.val;
         
         int leftSum = Math.max(0, helper(node.left));
         int rightSum = Math.max(0, helper(node.right));

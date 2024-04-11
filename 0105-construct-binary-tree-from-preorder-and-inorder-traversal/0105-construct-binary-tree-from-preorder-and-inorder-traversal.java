@@ -13,53 +13,33 @@
  *     }
  * }
  */
+
 class Solution {
+    int preorderIndex;
+    Map<Integer, Integer> inorderIndexMap;
     public TreeNode buildTree(int[] preorder, int[] inorder) {
-        
-        
-     return helper(preorder, 0, preorder.length-1, inorder, 0, inorder.length-1);       
-        
-     //         1
-     //        / \
-     //       2   3
-     //      /\   /\ 
-     //     4  5 6  7       
-     //             r    r  le ri  r  le ri
-     // preorder = [1,   2, 4,5    3, 6,7]
-     //            le r ri  r  le r ri
-     // inorder = [4,2,5,  1,  6,3,7]               
-        
+        preorderIndex = 0;
+        // build a hashmap to store value -> its index relations
+        inorderIndexMap = new HashMap<>();
+        for (int i = 0; i < inorder.length; i++) {
+            inorderIndexMap.put(inorder[i], i);
+        }
+
+        return arrayToTree(preorder, 0, preorder.length - 1);
     }
-    
-    public TreeNode helper(int[] preorder, int prestart, int preend,
-                          int[] inorder, int instart, int inend){
-        
-        // base case
-      if(prestart > preend || instart > inend)  return null;
-        
-      int val = preorder[prestart];
-        
-      TreeNode root = new TreeNode(val);
-        
-      
-      int inorderRootIndex = instart;
-       
-      while(inorder[inorderRootIndex] != val){
-          inorderRootIndex++;
-      }
-        
-      int leftSubTreeSize = inorderRootIndex - instart;
-      
-    
-      root.left = helper(preorder, prestart + 1, prestart + leftSubTreeSize,
-                        inorder, instart, inorderRootIndex-1);
-        
-      
-      root.right = helper(preorder, prestart + leftSubTreeSize + 1, preend,
-                         inorder, inorderRootIndex+1, inend);
-           
-      return root;     
-        
+
+    private TreeNode arrayToTree(int[] preorder, int left, int right) {
+        // if there are no elements to construct the tree
+        if (left > right) return null;
+
+        // select the preorder_index element as the root and increment it
+        int rootValue = preorder[preorderIndex++];
+        TreeNode root = new TreeNode(rootValue);
+
+        // build left and right subtree
+        // excluding inorderIndexMap[rootValue] element because it's the root
+        root.left = arrayToTree(preorder, left, inorderIndexMap.get(rootValue) - 1);
+        root.right = arrayToTree(preorder, inorderIndexMap.get(rootValue) + 1, right);
+        return root;
     }
-    
 }

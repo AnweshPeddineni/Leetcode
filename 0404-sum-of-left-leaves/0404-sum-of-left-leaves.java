@@ -22,22 +22,20 @@ class Solution {
         return leftLeafSum;        
     }
     
-    private int helper(TreeNode node){
+    private void helper(TreeNode node){
         
-        if(node == null) return 0;
+        if(node == null) return;
         
-         
-        
-        int left = helper(node.left);
+        helper(node.left);
         
         if(node.left != null && node.left.left == null && node.left.right == null){
             leftLeafSum += node.left.val;
         }
         
-        int right = helper(node.right);
+        helper(node.right);
         
-        return leftLeafSum;
-           
+        
+                
     }
     
 }

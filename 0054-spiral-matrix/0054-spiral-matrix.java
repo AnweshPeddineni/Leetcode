@@ -1,45 +1,32 @@
 class Solution {
     public List<Integer> spiralOrder(int[][] matrix) {
+        List<Integer> answer = new ArrayList<>();
+        int m = matrix.length;
+        int n = matrix[0].length;
         
-        ArrayList<Integer> result = new ArrayList<>();
+        int rep = 0;
         
-        int h = matrix.length;
-        int w = matrix[0].length;
-        
-        int top = 0;
-        int bottom = h-1;
-        int left = 0;
-        int right = w-1;
-        
-        while(top <= bottom && left <= right){
-            
-            for(int j = left; j <= right; j++){
-                result.add(matrix[top][j]);
-            }
-            top++;
-            
-            for(int i = top; i <= bottom; i++){
-                result.add(matrix[i][right]);
-            }
-            right--;
-            
-            
-            if(top <= bottom){
-                for(int j = right; j >= left; j--){
-                    result.add(matrix[bottom][j]);
-                }
-                bottom--;
-            }
-            
-            if (left <= right) {
-               for(int i = bottom; i >= top; i--){
-                   result.add(matrix[i][left]);
-               }
-               left++;
-            }
-            
+        while (answer.size() < m*n){
+            boundaryAdder(matrix, answer, rep, m-rep-1, rep, n-rep-1);
+            rep++;
         }
-        
-        return result;
+        return answer;     
     }
+    
+    public void boundaryAdder(int[][] matrix, List<Integer> answer,
+                             int row1, int row2, int col1, int col2){
+        
+        for(int i=col1; i<=col2; i++) answer.add(matrix[row1][i]);
+        
+        if(row1 == row2) return;
+        
+        for(int i=row1+1; i<=row2; i++) answer.add(matrix[i][col2]);
+        
+        if(col1 == col2) return;
+        
+        for(int i=col2-1; i>=col1; i--) answer.add(matrix[row2][i]);
+        for(int i=row2-1; i>row1; i--) answer.add(matrix[i][col1]);
+    }
+    
+    
 }

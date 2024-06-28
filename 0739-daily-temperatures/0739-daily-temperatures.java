@@ -5,13 +5,15 @@ class Solution {
         Stack<Integer> stack = new Stack<>();
         
         for (int currDay = 0; currDay < n; currDay++) {
+            
             int currentTemp = temperatures[currDay];
-            // Pop until the current day's temperature is not
-            // warmer than the temperature at the top of the stack
-            while (!stack.isEmpty() && currentTemp > temperatures[stack.peek()]) {
+            
+            while(!stack.isEmpty() && currentTemp > temperatures[stack.peek()]){
+                
                 int prevDay = stack.pop();
-                answer[prevDay] = currDay - prevDay;
+                answer[prevDay] = currDay-prevDay;
             }
+            
             stack.push(currDay);
         }
         

@@ -14,34 +14,32 @@ class Solution {
         // 0->not visited, 1->currently visiting, 2->visited
         int[] visited = new int[numCourses];
         
-         for(int i=0; i<numCourses; i++){
-             if(visited[i] == 0){
-                 if(isCyclic(adjList, visited, i)){
-                     return false;
-                 }
-             }
-         } 
-         return true;
-        
+        for(int i=0; i<numCourses; i++){
+            if(visited[i] == 0){
+                if(isCyclic(adjList, visited, i)){
+                    return false;  // Cycle detected
+                }
+            }
+        } 
+        return true; // No cycles detected
     }
     
     public boolean isCyclic(List<List<Integer>> adjList, int[] visited, int curr){
         if(visited[curr] == 1){
-            return true;
+            return true;  // Cycle detected
         }
         
-        visited[curr] = 1;
+        visited[curr] = 1; // Mark as currently visiting
         
         for(int num : adjList.get(curr)){
             if(visited[num] != 2){
-                if(isCyclic(adjList, visited, num)){
-                    return true;
+                if(isCyclic(adjList, visited, num)){  // Check return value
+                    return true;                        // Propagate cycle detection
                 }
             } 
         }
         
-        visited[curr] = 2;
-        return false;
+        visited[curr] = 2; // Mark as fully visited
+        return false;       // No cycle detected in this path
     }
-    
 }

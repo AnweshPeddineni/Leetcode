@@ -1,20 +1,23 @@
+//Keep updating minPrice and based on minPrice keep updating maxProfit
+
 class Solution {
     public int maxProfit(int[] prices) {
-        
-        int maxProf = 0; 
-        int left = 0;  
-        
-        for(int right=1; right<prices.length; right++){
+        if (prices == null || prices.length == 0) return 0;
+
+        int minPrice = prices[0];
+        int maxProfit = 0;
+
+        for (int i = 1; i < prices.length; i++) {
+            // Update minPrice to the lowest price encountered so far
+            minPrice = Math.min(minPrice, prices[i]);
             
-           if(prices[right] < prices[left]){
-               left = right;
-           }
-           
-           int currProf = prices[right] - prices[left];
-           if(currProf > maxProf){
-               maxProf = currProf;
-           }
+            // Calculate the profit if sold on day i
+            int profit = prices[i] - minPrice;
+            
+            // Update maxProfit if this profit is the highest seen so far
+            maxProfit = Math.max(maxProfit, profit);
         }
-        return maxProf;
+
+        return maxProfit;
     }
 }

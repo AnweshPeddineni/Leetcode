@@ -1,44 +1,26 @@
 class Solution {
     public int minCost(int[][] costs) {
-        // Handle edge case where no houses are present
-        if (costs == null || costs.length == 0) return 0;
-        
         int n = costs.length;
-        // Initialize memo as a HashMap with key as "house-lastColor" and value as min cost
-        Map<String, Integer> memo = new HashMap<>();
-        return minCostHelper(costs, 0, -1, memo);
-    }
+        int[][] dp = new int[n][3];
 
-    private int minCostHelper(int[][] costs, int house, int prevColor, Map<String, Integer> memo) {
-        // Base case: all houses have been painted
-        if (house == costs.length) {
-            return 0;
+        // Base case: For the first house, the minimum cost is the cost of painting it in any color
+        for (int i = 0; i < 3; i++) {
+            dp[0][i] = costs[0][i];
         }
 
-        // Create a unique key for the current state
-        String key = house + "-" + prevColor;
-
-        // Check if the result is already computed
-        if (memo.containsKey(key)) {
-            return memo.get(key);
+        // For the remaining houses, calculate the minimum cost based on the previous house's costs
+        for (int i = 1; i < n; i++) {
+            dp[i][0] = costs[i][0] + Math.min(dp[i - 1][1], dp[i - 1][2]);
+            dp[i][1] = costs[i][1] + Math.min(dp[i - 1][0], dp[i - 1][2]);
+            dp[i][2] = costs[i][2] + Math.min(dp[i - 1][0], dp[i - 1][1]);
         }
 
+        // The minimum cost of painting all houses is the minimum of the last row in the DP table
         int minCost = Integer.MAX_VALUE;
-
-        // Iterate through all possible colors for the current house
-        for (int color = 0; color < 3; color++) {
-            // Skip the color if it's the same as the previous house's color
-            if (color == prevColor) continue;
-
-            // Calculate the cost for painting the current house with the chosen color
-            int currentCost = costs[house][color] + minCostHelper(costs, house + 1, color, memo);
-
-            // Update the minimum cost found so far
-            minCost = Math.min(minCost, currentCost);
+        for (int i = 0; i < 3; i++) {
+            minCost = Math.min(minCost, dp[n - 1][i]);
         }
-
-        // Store the computed minimum cost in the memoization map
-        memo.put(key, minCost);
+        
         return minCost;
     }
 }

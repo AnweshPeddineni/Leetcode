@@ -4,28 +4,23 @@ class Solution {
         if (costs == null || costs.length == 0) return 0;
         
         int n = costs.length;
-        // Initialize memo with 4 columns to accommodate prevColor = -1, 0, 1, 2
-        // prevColor = -1 means there is no previous color
-        int[][] dp = new int[n][4];
-        for (int[] row : dp) {
-            Arrays.fill(row, -1); // Fill with -1 to indicate uncomputed states
-        }
-        return minCostHelper(costs, 0, -1, dp);
+        // Initialize memo as a HashMap with key as "house-lastColor" and value as min cost
+        Map<String, Integer> memo = new HashMap<>();
+        return minCostHelper(costs, 0, -1, memo);
     }
 
-    private int minCostHelper(int[][] costs, int index, int prevColor, int[][] dp) {
+    private int minCostHelper(int[][] costs, int house, int prevColor, Map<String, Integer> memo) {
         // Base case: all houses have been painted
-        if (index == costs.length) {
+        if (house == costs.length) {
             return 0;
         }
 
-        // Map prevColor to memoization index
-        // -1 -> 0, 0 -> 1, 1 -> 2, 2 -> 3
-        int memoColor = prevColor + 1;
+        // Create a unique key for the current state
+        String key = house + "-" + prevColor;
 
         // Check if the result is already computed
-        if (dp[index][memoColor] != -1) {
-            return dp[index][memoColor];
+        if (memo.containsKey(key)) {
+            return memo.get(key);
         }
 
         int minCost = Integer.MAX_VALUE;
@@ -36,14 +31,14 @@ class Solution {
             if (color == prevColor) continue;
 
             // Calculate the cost for painting the current house with the chosen color
-            int currentCost = costs[index][color] + minCostHelper(costs, index + 1, color, dp);
+            int currentCost = costs[house][color] + minCostHelper(costs, house + 1, color, memo);
 
             // Update the minimum cost found so far
             minCost = Math.min(minCost, currentCost);
         }
 
-        // Store the computed minimum cost in the memoization array
-        dp[index][memoColor] = minCost;
+        // Store the computed minimum cost in the memoization map
+        memo.put(key, minCost);
         return minCost;
     }
 }

@@ -1,41 +1,48 @@
 class Solution {
     public int search(int[] nums, int target) {
-        //step1 - finding pivot
+        if (nums == null || nums.length == 0) return -1;
+        
         int left = 0;
         int right = nums.length - 1;
-        int mid = 0;
-        while(left < right){
-            mid = (left + right)/2;
-            if(nums[mid] > nums[right]){
+        
+        // Step 1: Find the pivot (smallest element index)
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            
+            if (nums[mid] > nums[right]) {
+                // Pivot is in the right half
                 left = mid + 1;
             } else {
+                // Pivot is in the left half (including mid)
                 right = mid;
             }
         }
         
-        //step-2 finding in which of the sorted array should I search
-        int start = left;
+        int pivot = left;
         left = 0;
         right = nums.length - 1;
         
-        if(nums[start] <= target && nums[right] >= target){
-            left = start;
-        } else{
-            right = start-1;
+        // Step 2: Determine the search boundaries
+        if (target >= nums[pivot] && target <= nums[right]) {
+            left = pivot;
+        } else {
+            right = pivot - 1;
         }
         
-        //Step-3
-        while(left <= right){
-            mid = (left + right)/2;
-            if(nums[mid] > target){
-                right = mid - 1;;
-            } else if(nums[mid] < target){
+        // Step 3: Perform standard binary search
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            
+            if (nums[mid] == target) {
+                return mid;
+            } else if (nums[mid] < target) {
                 left = mid + 1;
             } else {
-                return mid;
+                right = mid - 1;
             }
         }
         
+        // Target not found
         return -1;
     }
 }

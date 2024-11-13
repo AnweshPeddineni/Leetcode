@@ -23,7 +23,7 @@ class CustomStack {
     
     public void increment(int k, int val) {
         for (int i = 0; i < stack.size() && i < k; i++) {
-            stack.set(i, stack.get(i) + val);  // Example modification: doubling each element
+            stack.set(i, stack.get(i) + val);  
         } 
     }
 }

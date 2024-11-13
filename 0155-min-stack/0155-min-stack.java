@@ -1,30 +1,41 @@
+
+// Here minStack is monotonically decreasing from bottom to top.
+
 class MinStack {
-    private Stack<int[]> stack = new Stack<>();
+    private Stack<Integer> stack;
+    private Stack<Integer> minStack;
 
-    public MinStack() {}
-
-    public void push(int x) {
-        /* If the stack is empty, then the min value
-         * must just be the first value we add. */
-        if (stack.isEmpty()) {
-            stack.push(new int[] { x, x });
-            return;
+    public MinStack() {
+        stack = new Stack<>();
+        minStack = new Stack<>();
+    }
+    
+    public void push(int val) {
+        // Push the value onto the main stack
+        stack.push(val);
+        
+        // Push onto the minStack if it's empty or the new value is the current minimum
+        if (minStack.isEmpty() || val <= minStack.peek()) {
+            minStack.push(val);
         }
-
-        int currentMin = stack.peek()[1];
-        stack.push(new int[] { x, Math.min(x, currentMin) });
     }
-
+    
     public void pop() {
-        stack.pop();
+        // Pop from the main stack
+        int poppedValue = stack.pop();
+        
+        // If the popped value is the minimum, pop it from minStack too
+        if (poppedValue == minStack.peek()) {
+            minStack.pop();
+        }
     }
-
+    
     public int top() {
-        return stack.peek()[0];
+        return stack.peek();
     }
-
+    
     public int getMin() {
-        return stack.peek()[1];
+        return minStack.peek();
     }
 }
 

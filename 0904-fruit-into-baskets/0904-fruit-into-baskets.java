@@ -1,23 +1,26 @@
 class Solution {
     public int totalFruit(int[] fruits) {
-        int l = 0;
-        int r = 0;
-        int maxFruits = 0;
-        Map<Integer,Integer> map = new HashMap<>();
-        while(r < fruits.length)
-        {
-            map.put(fruits[r] , map.getOrDefault(fruits[r] , 0) + 1);
-            if(map.keySet().size() > 2)
-            {
-                if(map.get(fruits[l]) == 1)
-                    map.remove(fruits[l]);
-                else
-                    map.put(fruits[l] , map.getOrDefault(fruits[l] , 0) - 1);
-                l++;
+        HashMap<Integer, Integer> map = new HashMap<>(); // Map to store fruit type and its count
+        int left = 0; // Sliding window left pointer
+        int maxFruits = 0; // Maximum fruits collected
+
+        for (int right = 0; right < fruits.length; right++) {
+            // Add the current fruit to the map and increment its count
+            map.put(fruits[right], map.getOrDefault(fruits[right], 0) + 1);
+
+            // If there are more than 2 types of fruits, shrink the window
+            while (map.size() > 2) {
+                map.put(fruits[left], map.get(fruits[left]) - 1); // Decrease count of the leftmost fruit
+                if (map.get(fruits[left]) == 0) {
+                    map.remove(fruits[left]); // Remove fruit type if its count is 0
+                }
+                left++; // Shrink the window
             }
-            maxFruits = Math.max(maxFruits , r - l + 1);
-            r++;
+
+            // Update the maximum number of fruits collected
+            maxFruits = Math.max(maxFruits, right - left + 1);
         }
-        return maxFruits;
+
+        return maxFruits; // Return the maximum number of fruits collected
     }
 }

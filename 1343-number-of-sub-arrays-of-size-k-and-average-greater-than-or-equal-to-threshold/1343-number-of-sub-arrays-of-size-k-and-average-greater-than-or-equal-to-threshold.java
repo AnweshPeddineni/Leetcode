@@ -1,28 +1,34 @@
-// Java implementation
 class Solution {
     public int numOfSubarrays(int[] arr, int k, int threshold) {
-        int len = arr.length;
-        int sum = 0;
-        int count = 0;
         
-        // Calculate the sum of the first k elements
-        for (int i = 0; i < k; i++) {
-            sum += arr[i];
+        int left = 0;
+        
+        int windowSum = 0;
+
+        int result = 0;
+
+        for(int i=0; i<k; i++){
+            windowSum += arr[i];
         }
-        
-        // Check if the first window meets the threshold
-        if (sum / k >= threshold) {
-            count++;
+
+        if(windowSum/k >= threshold){
+            result++;
         }
-        
-        // Slide the window and check each subsequent window
-        for (int i = k; i < len; i++) {
-            sum += arr[i] - arr[i - k]; // Slide window by adding next element and subtracting first element of the window
-            if (sum / k >= threshold) {
-                count++;
+
+        for(int right = k; right < arr.length; right++){
+            
+            windowSum += arr[right];
+
+            if(right-left+1 > k){
+                windowSum -= arr[left];
+                left++;
+            }
+
+            if(windowSum/k >= threshold){
+            result++;
             }
         }
-        
-        return count;
+
+        return result;
     }
 }

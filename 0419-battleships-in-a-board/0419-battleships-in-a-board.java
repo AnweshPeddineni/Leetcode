@@ -6,31 +6,18 @@ class Solution {
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
+                // Check if this cell is part of a battleship
                 if (board[i][j] == 'X') {
+                    // Check if it's the start of a new battleship
+                    if (i > 0 && board[i - 1][j] == 'X') continue; // Skip if there's an 'X' above
+                    if (j > 0 && board[i][j - 1] == 'X') continue; // Skip if there's an 'X' to the left
+
+                    // This is a new battleship
                     count++;
-                    dfs(board, i, j);
                 }
             }
         }
 
         return count;
     }
-
-    private void dfs(char[][] board, int i, int j) {
-        // Base case: Out of bounds or not part of a battleship
-        if (i < 0 || i >= board.length || j < 0 || j >= board[0].length || board[i][j] == '.') {
-            return;
-        }
-
-        // Mark the cell as visited
-        board[i][j] = '.';
-
-        // Explore all four directions (up, down, left, right)
-        dfs(board, i - 1, j); // Up
-        dfs(board, i + 1, j); // Down
-        dfs(board, i, j - 1); // Left
-        dfs(board, i, j + 1); // Right
-    }
 }
-
-// The idea is to traverse the grid and use DFS to "sink" a detected battleship. When a cell with 'X' is found:

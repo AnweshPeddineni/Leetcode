@@ -1,45 +1,39 @@
 class Solution {
     public boolean canFinish(int numCourses, int[][] prerequisites) {
-        
-        List<List<Integer>> adjList = new ArrayList<>();
-        
-        for(int i=0; i<numCourses; i++){
-            adjList.add(new ArrayList<>());
+        List<List<Integer>> graph = new ArrayList<>();
+        int[] inDegree = new int[numCourses];
+
+        // Step 1: Build the graph and in-degree array
+        for (int i = 0; i < numCourses; i++) {
+            graph.add(new ArrayList<>());
         }
-        
-        for(int i=0; i<prerequisites.length; i++){
-            adjList.get(prerequisites[i][0]).add(prerequisites[i][1]);
+        for (int[] prereq : prerequisites) {
+            graph.get(prereq[1]).add(prereq[0]);
+            inDegree[prereq[0]]++;
         }
-        
-        // 0->not visited, 1->currently visiting, 2->visited
-        int[] visited = new int[numCourses];
-        
-        for(int i=0; i<numCourses; i++){
-            if(visited[i] == 0){
-                if(isCyclic(adjList, visited, i)){
-                    return false;  // Cycle detected
+
+        // Step 2: Add nodes with in-degree 0 to the queue
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (inDegree[i] == 0) {
+                queue.offer(i);
+            }
+        }
+
+        // Step 3: Process the graph
+        int visitedCourses = 0;
+        while (!queue.isEmpty()) {
+            int course = queue.poll();
+            visitedCourses++;
+            for (int neighbor : graph.get(course)) {
+                inDegree[neighbor]--;
+                if (inDegree[neighbor] == 0) {
+                    queue.offer(neighbor);
                 }
             }
-        } 
-        return true; // No cycles detected
-    }
-    
-    public boolean isCyclic(List<List<Integer>> adjList, int[] visited, int curr){
-        if(visited[curr] == 1){
-            return true;  // Cycle detected
         }
-        
-        visited[curr] = 1; // Mark as currently visiting
-        
-        for(int num : adjList.get(curr)){
-            if(visited[num] != 2){
-                if(isCyclic(adjList, visited, num)){  // Check return value
-                    return true;                        // Propagate cycle detection
-                }
-            } 
-        }
-        
-        visited[curr] = 2; // Mark as fully visited
-        return false;       // No cycle detected in this path
+
+        // Step 4: Check if all courses were visited
+        return visitedCourses == numCourses;
     }
 }

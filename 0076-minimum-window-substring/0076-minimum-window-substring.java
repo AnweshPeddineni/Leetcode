@@ -1,53 +1,52 @@
+import java.util.HashMap;
+
 class Solution {
     public String minWindow(String s, String t) {
-        if (s.length() == 0 || t.length() == 0) {
-            return "";
-        }
+        if (t.length() > s.length()) return "";  // **If `t` is longer, return empty string**
 
-        // Step 1: Create a map for characters in t
-        HashMap<Character, Integer> tMap = new HashMap<>();
+        // **Frequency maps to track character counts**
+        HashMap<Character, Integer> targetCount = new HashMap<>();
+        HashMap<Character, Integer> windowCount = new HashMap<>();
+
+        // **Populate targetCount with characters from `t`**
         for (char c : t.toCharArray()) {
-            tMap.put(c, tMap.getOrDefault(c, 0) + 1);
+            targetCount.put(c, targetCount.getOrDefault(c, 0) + 1);
         }
 
-        // Step 2: Sliding window variables
-        HashMap<Character, Integer> windowMap = new HashMap<>();
-        int have = 0; // count of characters we have in the correct frequency
-        int need = tMap.size(); // the number of unique characters in t we need
-        int left = 0;
+        int left = 0, right = 0;
+        int matchedCharacters = 0;  // **Count of characters in `s` matching `t`**
         int minLength = Integer.MAX_VALUE;
-        int start = 0;
+        int startIndex = 0;  // **Start index of the minimum window**
 
-        // Step 3: Expand the window by moving the right pointer
-        for (int right = 0; right < s.length(); right++) {
+        // **Expand the window by moving `right`**
+        while (right < s.length()) {
             char c = s.charAt(right);
-            windowMap.put(c, windowMap.getOrDefault(c, 0) + 1);
+            windowCount.put(c, windowCount.getOrDefault(c, 0) + 1);
 
-            // Step 4: Check if the current character satisfies the tMap frequency
-            if (tMap.containsKey(c) && windowMap.get(c).intValue() == tMap.get(c).intValue()) {
-                have++;
+            if (targetCount.containsKey(c) && windowCount.get(c).intValue() == targetCount.get(c).intValue()) {
+                matchedCharacters++;  // **Character `c` fully matches its required count**
             }
 
-            // Step 5: Contract the window by moving the left pointer
-            while (have == need) {
-                // Update the minimum window size
+            // **Contract the window if all characters in `t` are matched**
+            while (matchedCharacters == targetCount.size()) {
                 if (right - left + 1 < minLength) {
-                    minLength = right - left + 1;
-                    start = left;
+                    minLength = right - left + 1;  // **Update minLength**
+                    startIndex = left;  // **Update the start index of the minimum window**
                 }
 
-                // Move the left pointer and update the window map
+                // **Remove the leftmost character and move `left`**
                 char leftChar = s.charAt(left);
-                windowMap.put(leftChar, windowMap.get(leftChar) - 1);
-
-                if (tMap.containsKey(leftChar) && windowMap.get(leftChar) < tMap.get(leftChar)) {
-                    have--;
+                windowCount.put(leftChar, windowCount.get(leftChar) - 1);
+                if (targetCount.containsKey(leftChar) && windowCount.get(leftChar) < targetCount.get(leftChar)) {
+                    matchedCharacters--;  // **Character `leftChar` is no longer fully matched**
                 }
                 left++;
             }
+
+            right++;
         }
 
-        // Step 6: Return the result
-        return minLength == Integer.MAX_VALUE ? "" : s.substring(start, start + minLength);
+        // **Return the minimum window substring if found**
+        return minLength == Integer.MAX_VALUE ? "" : s.substring(startIndex, startIndex + minLength);
     }
 }

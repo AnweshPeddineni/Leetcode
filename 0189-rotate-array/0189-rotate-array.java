@@ -1,7 +1,9 @@
 class Solution {
     public void rotate(int[] nums, int k) {
 
-        if(nums.length < 2) return;
+
+
+        k = k % nums.length;
 
         Stack<Integer> stack = new Stack<>();
        

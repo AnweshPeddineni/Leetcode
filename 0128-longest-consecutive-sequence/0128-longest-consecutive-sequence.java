@@ -1,36 +1,39 @@
+import java.util.*;
+
 class Solution {
     public int longestConsecutive(int[] nums) {
-        
         if (nums.length == 0) return 0;
 
         HashSet<Integer> set = new HashSet<>();
-        
-        // Add all numbers to the set
         for (int num : nums) {
             set.add(num);
         }
-        
-        int maxSequenceLength = 0;
-        
-        // Iterate over the numbers
+
+        int maxLength = 0;
+
         for (int num : nums) {
-            
-            // Only start counting when num is the start of a sequence
-            if (!set.contains(num - 1)) {
-                int currentNum = num;
-                int currentSequenceLength = 1;
-                
-                // Keep incrementing and checking if the next number exists
-                while (set.contains(currentNum + 1)) {
-                    currentNum += 1;
-                    currentSequenceLength += 1;
+            if (set.contains(num)) {  // Only process if it's still in the set
+                set.remove(num);  // Remove the number immediately
+                int currLength = 1;
+                int left = num - 1, right = num + 1;
+
+                // Expand left and right while removing elements from the set
+                while (set.contains(left)) {
+                    set.remove(left);
+                    currLength++;
+                    left--;
                 }
                 
-                // Update the max sequence length
-                maxSequenceLength = Math.max(maxSequenceLength, currentSequenceLength);
+                while (set.contains(right)) {
+                    set.remove(right);
+                    currLength++;
+                    right++;
+                }
+
+                maxLength = Math.max(maxLength, currLength);
             }
         }
-        
-        return maxSequenceLength;
+
+        return maxLength;
     }
 }

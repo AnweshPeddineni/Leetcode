@@ -1,20 +1,33 @@
 class Solution {
     public boolean isPalindrome(String s) {
-        for(int i = 0, j = s.length()-1; i<j ; i++, j--){
-            
-            // these while loops are to skip empty spaces, non letter, non number chars
-            while(i<j && !Character.isLetterOrDigit(s.charAt(i))){
-                i++;
-            }
-            
-            while(i<j && !Character.isLetterOrDigit(s.charAt(j))){
-                j--;
-            }
-            
-            if(Character.toLowerCase(s.charAt(i)) != Character.toLowerCase(s.charAt(j))){
+        // Step 1: Clean the string
+        String cleanedString = cleanString(s);
+
+        // Step 2: Use the two-pointer technique to check if the cleaned string is a palindrome
+        int left = 0;
+        int right = cleanedString.length() - 1;
+
+        while (left < right) {
+            if (cleanedString.charAt(left) != cleanedString.charAt(right)) {
                 return false;
             }
+            left++;
+            right--;
         }
+
         return true;
+    }
+
+    // Helper method to clean the string by removing non-alphanumeric characters
+    private String cleanString(String s) {
+        StringBuilder sb = new StringBuilder();
+
+        for (char c : s.toCharArray()) {
+            if (Character.isLetterOrDigit(c)) {
+                sb.append(Character.toLowerCase(c));
+            }
+        }
+
+        return sb.toString();
     }
 }

@@ -2,37 +2,43 @@ class Solution {
     public int[] asteroidCollision(int[] asteroids) {
         Stack<Integer> stack = new Stack<>();
 
-        for(int curr : asteroids){
+        for (int asteroid : asteroids) {
+            boolean destroyed = false;
 
-            while(!stack.isEmpty() && stack.peek() > 0 && curr < 0){
+    // Process collisions only if the current asteroid is moving left and stack top is moving right
+                //           bottom            top
+          // For this stack = [-1, 10, 5, 4, 5, 6] new element is -10, this while loop will make the 
+         // stack as [-1, -10]
+            while (!stack.isEmpty() && stack.peek() > 0 && asteroid < 0) {
                 int top = stack.peek();
 
-                if (Math.abs(top) > Math.abs(curr)) { 
-                    curr = 0; // Destroy `curr`, no need to add it
-                } else if (Math.abs(top) == Math.abs(curr)) {
-                    stack.pop(); // Destroy both
-                    curr = 0;
+                if (Math.abs(asteroid) == Math.abs(top)) {
+                    // Case 1: Both asteroids are equal in size, so both are destroyed
+                    stack.pop();
+                    destroyed = true;
+                    break;
+                } else if (Math.abs(asteroid) > Math.abs(top)) {
+                    // Case 2: Current asteroid is larger, so the top of the stack is destroyed
+                    stack.pop();
                 } else {
-                    stack.pop(); // Destroy `top` and continue checking
+                    // Case 3: Stack top asteroid is larger, so the current asteroid is destroyed
+                    destroyed = true;
+                    break;
                 }
-
             }
 
-            if (curr != 0) { // Only push surviving asteroids
-               stack.push(curr);
+            // If the current asteroid was not destroyed in a collision, push it onto the stack
+            if (!destroyed) {
+                stack.push(asteroid);
             }
         }
 
+        // Convert the stack to an array in the correct order
         int[] result = new int[stack.size()];
-
-        for(int i=0; i<stack.size(); i++){
-            result[i] = stack.get(i);
+        for (int i = result.length - 1; i >= 0; i--) {
+            result[i] = stack.pop();
         }
 
         return result;
     }
 }
-//              ->  <-  <-  <-   <-  <-  -> -> ->
-// asteroids = [15, -5, -5, -5, -15, -3, 3, 2, -1]
-
-// output = [-3, 3, 2]

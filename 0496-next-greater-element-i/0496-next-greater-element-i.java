@@ -1,45 +1,34 @@
-
-// nums1 = [4,1,2], nums2 = [1,3,4,2]
-
-// result = [0,0,0]
-
-// stack =     -1]
-         
-
-
-
 class Solution {
     public int[] nextGreaterElement(int[] nums1, int[] nums2) {
         
         HashMap<Integer, Integer> map = new HashMap<>();
+
         Stack<Integer> stack = new Stack<>();
-        int[] result = new int[nums1.length];
-        
-        // Traverse nums2 from right to left
-        for (int i = nums2.length - 1; i >= 0; i--) {
-            int current = nums2[i];
+ 
+        for(int i=nums2.length-1; i>=0; i--){
             
-            // Pop elements from the stack that are smaller than or equal to current
-            while (!stack.isEmpty() && stack.peek() <= current) {
+            while(!stack.isEmpty() && nums2[i] >= stack.peek()){
                 stack.pop();
             }
-            
-            // If stack is not empty, the top element is the next greater element
-            if (!stack.isEmpty()) {
-                map.put(current, stack.peek());
-            } else {
-                map.put(current, -1);
+
+            if(stack.isEmpty()){
+                map.put(nums2[i], -1);
+            }else{
+                map.put(nums2[i], stack.peek());
             }
-            
-            // Push the current element onto the stack
-            stack.push(current);
+
+            stack.push(nums2[i]);
+
         }
-        
-        // Fill the result array based on nums1 using the map
-        for (int i = 0; i < nums1.length; i++) {
+
+        int[] result = new int[nums1.length];
+
+        for(int i=0; i<result.length; i++){
             result[i] = map.get(nums1[i]);
         }
-        
+
         return result;
     }
 }
+
+

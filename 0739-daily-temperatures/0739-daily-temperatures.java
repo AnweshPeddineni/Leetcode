@@ -1,22 +1,21 @@
 class Solution {
     public int[] dailyTemperatures(int[] temperatures) {
-        int n = temperatures.length;
-        int[] answer = new int[n];
-        Stack<Integer> stack = new Stack<>();
+        Stack<Integer> stack = new Stack();
+        int[] result = new int[temperatures.length];
         
-        for (int currDay = 0; currDay < n; currDay++) {
+        for(int currentDay = 0; currentDay < temperatures.length; currentDay++){
             
-            int currentTemp = temperatures[currDay];
+            int currentTemp = temperatures[currentDay];
             
             while(!stack.isEmpty() && currentTemp > temperatures[stack.peek()]){
-                
-                int prevDay = stack.pop();
-                answer[prevDay] = currDay-prevDay;
+                int previousDay = stack.pop();
+                result[previousDay] = currentDay - previousDay;
             }
             
-            stack.push(currDay);
+            stack.push(currentDay);
         }
         
-        return answer;
+        return result;
+        
     }
 }

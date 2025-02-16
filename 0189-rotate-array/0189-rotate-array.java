@@ -1,26 +1,18 @@
 class Solution {
     public void rotate(int[] nums, int k) {
 
+        int[] result = new int[nums.length];
 
-
-        k = k % nums.length;
-
-        Stack<Integer> stack = new Stack<>();
-       
-        int index = nums.length-1;
-
-        while(index > nums.length-1-k){
-            stack.push(nums[index]);
-            index--;
+        for(int i=0; i<nums.length; i++){
+            
+            result[(i+k)%(nums.length)] = nums[i];
         }
 
-        for(int i=nums.length-1; i>=k; i--){
-            nums[i] = nums[i-k];
-        }
 
-        for(int i=0; i<k; i++){
-            nums[i] = stack.pop();
-        }
+        for(int i=0; i<nums.length; i++){
 
+            nums[i] = result[i];
+        }
+        
     }
 }

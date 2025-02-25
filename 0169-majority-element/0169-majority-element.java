@@ -1,18 +1,20 @@
 class Solution {
     public int majorityElement(int[] nums) {
-        HashMap<Integer, Integer> countMap = new HashMap<>();
-        int n = nums.length;
+        int majority = 0;
+        int count = 0;
 
-        // Count the occurrences of each element
-        for (int num : nums) {
-            countMap.put(num, countMap.getOrDefault(num, 0) + 1);
+        for(int i=0; i<nums.length; i++){
+            
+            if(count == 0){
+                majority = nums[i];
+            }
 
-            // Check if the current element is the majority element
-            if (countMap.get(num) > n / 2) {
-                return num;
+            if(nums[i] == majority){
+                count++;
+            }else{
+                count--;
             }
         }
-
-        return -1; // This line will never be reached as per the problem statement
+        return majority;
     }
 }

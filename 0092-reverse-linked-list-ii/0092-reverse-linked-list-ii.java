@@ -10,27 +10,34 @@
  */
 class Solution {
     public ListNode reverseBetween(ListNode head, int left, int right) {
-        if (head == null || left == right) {
-            return head;
-        }
+        // create a dummy node to mark the head of this list
+    ListNode dummy = new ListNode(0);
+    dummy.next = head;
 
-        ListNode dummy = new ListNode(0);
-        dummy.next = head;
-        ListNode prev = dummy;
+    // make markers for currentNode and for the node before reversing
+    ListNode leftPre = dummy;
+    ListNode currNode = head;
 
-        for (int i = 0; i < left - 1; i++) {
-            prev = prev.next;
-        }
+    for (int i = 0; i < left - 1; i++) {
+      leftPre = leftPre.next;
+      currNode = currNode.next;
+    }
 
-        ListNode cur = prev.next;
+    // make a marker to node where we start reversing
+    ListNode subListHead = currNode;
 
-        for (int i = 0; i < right - left; i++) {
-            ListNode temp = cur.next;
-            cur.next = temp.next;
-            temp.next = prev.next;
-            prev.next = temp;
-        }
+    ListNode preNode = null;
+    for (int i = 0; i <= right - left; i++) {
+      ListNode nextNode = currNode.next;
+      currNode.next = preNode;
+      preNode = currNode;
+      currNode = nextNode;
+    }
 
-        return dummy.next;        
+    // Join the pieces
+    leftPre.next = preNode;
+    subListHead.next = currNode;
+
+    return dummy.next;
     }
 }

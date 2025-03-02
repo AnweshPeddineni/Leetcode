@@ -1,32 +1,23 @@
 class Solution {
     public int pivotIndex(int[] nums) {
+        int totalSum = 0, leftSum = 0;
 
-        int result = -1;
-        
-        int[] prefixSum = new int[nums.length];
-        int[] suffixSum = new int[nums.length];
- 
-        int sum = 0;
-        for(int i=1; i<nums.length; i++){
-            prefixSum[i] = sum + nums[i-1];
-            sum = prefixSum[i];
+        // Calculate total sum of the array
+        for (int num : nums) {
+            totalSum += num;
         }
 
-        sum = 0;
-        for(int i=nums.length-2; i>=0; i--){
-           suffixSum[i] = sum + nums[i+1];
-           sum = suffixSum[i];
-        }
-  
-      
-        // Find pivot index where prefixSum[i] == suffixSum[i]
+        // Iterate through the array and check for pivot index
         for (int i = 0; i < nums.length; i++) {
-            if (prefixSum[i] == suffixSum[i]) {
-                return i; // Found pivot index
+            // If leftSum equals rightSum, return index
+            if (leftSum == totalSum - leftSum - nums[i]) {
+                return i;
             }
-        }
-        
-        return result;
 
+            // Update leftSum for next iteration
+            leftSum += nums[i];
+        }
+
+        return -1; // No pivot index found
     }
 }

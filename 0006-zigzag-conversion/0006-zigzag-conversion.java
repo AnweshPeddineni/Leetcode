@@ -1,38 +1,48 @@
 class Solution {
     public String convert(String s, int numRows) {
-        // Edge Case: If numRows is 1 or greater than or equal to the string length, return s
-        if(numRows == 1 || numRows >= s.length()){
-            return s;
+        if (numRows == 1 || s.length() <= numRows) {
+            return s; // ✅ If only one row or length too short, return as is.
         }
-        
-        // Initialize an array of StringBuilders for each row
-        StringBuilder[] rows = new StringBuilder[numRows];
-        for(int i=0; i<numRows; i++){
-            rows[i] = new StringBuilder();
-        }
-        
-        int currentRow = 0;
-        boolean goingDown = false;
-        
-        // Iterate through each character in the string
-        for(char c : s.toCharArray()){
-            rows[currentRow].append(c);
+
+        int rows = numRows;
+        int cols = s.length();  // ✅ Allocate enough columns to avoid out-of-bounds
+
+        char[][] grid = new char[rows][cols];
+
+        int row = 0;
+        int col = 0;
+        int direction = 1;  // ✅ 1 for downward, 0 for upward diagonal
+
+        for (char c : s.toCharArray()) {          
+            grid[row][col] = c;
             
-            // Change direction if we hit the top or bottom row
-            if(currentRow == 0 || currentRow == numRows - 1){
-                goingDown = !goingDown;
+            if (direction == 1) {  // ✅ Moving down
+                row++;
+                if (row == numRows - 1) {
+                    direction = 0; // Switch to diagonal
+                }
+            } else {  // ✅ Moving diagonally up
+                row--;
+                col++;  // ✅ Move right when going up
+                if (row == 0) {
+                    direction = 1; // Switch to downward
+                }
             }
-            
-            // Move up or down
-            currentRow += goingDown ? 1 : -1;
         }
-        
-        // Combine all rows into one string
-        StringBuilder result = new StringBuilder();
-        for(StringBuilder row : rows){
-            result.append(row);
+
+        StringBuilder sb = new StringBuilder();
+
+        // ✅ Collect characters row by row
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (Character.isLetter(grid[i][j]) ||
+                    grid[i][j] == '.' ||
+                    grid[i][j] == ',') { // ✅ Ignore empty characters
+                    sb.append(grid[i][j]);
+                }
+            }
         }
-        
-        return result.toString();
+
+        return sb.toString();
     }
 }

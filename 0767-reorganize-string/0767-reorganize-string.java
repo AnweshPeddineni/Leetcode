@@ -1,70 +1,46 @@
-
 class Solution {
-    // Helper class to store character and its frequency
-    class CharFrequency {
-        char character;
-        int frequency;
-
-        CharFrequency(char character, int frequency) {
-            this.character = character;
-            this.frequency = frequency;
-        }
-    }
-
     public String reorganizeString(String s) {
-        if (s == null || s.length() == 0) return "";
+        int n = s.length();
 
-        // Step 1: Count frequencies using a fixed-size array (26 for lowercase English letters)
+        // Frequency array for characters 'a' to 'z'
         int[] frequency = new int[26];
         for (char c : s.toCharArray()) {
             frequency[c - 'a']++;
         }
 
-        // Step 2: Early termination check
-        int maxFreq = 0;
-        for (int freq : frequency) {
-            if (freq > maxFreq) {
-                maxFreq = freq;
-            }
-        }
-        if (maxFreq > (s.length() + 1) / 2) {
-            return "";
-        }
-
-        // Step 3: Initialize max heap based on frequencies
-        PriorityQueue<CharFrequency> maxHeap = new PriorityQueue<>(
-            (a, b) -> b.frequency - a.frequency // Descending order
-        );
-
+        // Find the character with maximum frequency
+        int maxFreq = 0, maxCharIndex = 0;
         for (int i = 0; i < 26; i++) {
-            if (frequency[i] > 0) {
-                char currentChar = (char) (i + 'a');
-                maxHeap.offer(new CharFrequency(currentChar, frequency[i]));
+            if (frequency[i] > maxFreq) {
+                maxFreq = frequency[i];
+                maxCharIndex = i;
             }
         }
 
-        // Step 4: Reorganize the string
-        StringBuilder result = new StringBuilder();
-        CharFrequency prev = null; // To store the previously used character
+        // Impossible condition check
+        if (maxFreq > (n + 1) / 2) return "";
 
-        while (!maxHeap.isEmpty()) {
-            // Poll the character with the highest frequency
-            CharFrequency current = maxHeap.poll();
-            result.append(current.character);
+        // Result array to fill in-place
+        char[] result = new char[n];
+        int idx = 0;
 
-            // Decrement the frequency of the current character
-            current.frequency--;
-
-            // If there's a previously used character with remaining frequency, reinsert it into the heap
-            if (prev != null && prev.frequency > 0) {
-                maxHeap.offer(prev);
-            }
-
-            // Set the current character as previous for the next iteration
-            prev = current;
+        // Fill the most frequent character first (at even indices)
+        while (frequency[maxCharIndex] > 0) {
+            result[idx] = (char) (maxCharIndex + 'a');
+            idx += 2;  // Fill even indices first
+            frequency[maxCharIndex]--;
         }
 
-        // Step 5: Validate the result
-        return result.length() == s.length() ? result.toString() : "";
+        // Fill remaining characters
+        for (int i = 0; i < 26; i++) {
+            while (frequency[i] > 0) {
+                if (idx >= n) idx = 1;  // Switch to odd indices after filling even
+                result[idx] = (char) (i + 'a');
+                idx += 2;
+                frequency[i]--;
+            }
+        }
+
+        return new String(result);
     }
 }

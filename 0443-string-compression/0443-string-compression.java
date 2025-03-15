@@ -1,29 +1,27 @@
 class Solution {
     public int compress(char[] chars) {
-        int j = 0;  // Write pointer
-        int i = 0;  // Read pointer
+        int i = 0;
+        int j = 0;
 
-        while (i < chars.length) {
-            char currentChar = chars[i];  // Track current character
-            int count = 0;                // Track consecutive occurrences
+        while(j<chars.length && i<chars.length){
+            char currChar = chars[j];
+            int count = 0;
 
-            // **Count consecutive characters**
-            while (i < chars.length && chars[i] == currentChar) {
-                count++;
-                i++;
+            while(j<chars.length && chars[j] == currChar){
+               count++;
+               j++;
             }
 
-            // **Write the character**
-            chars[j++] = currentChar;
+            chars[i++] = currChar;
 
-            // **Write the count if greater than 1**
-            if (count > 1) {
-                for (char c : String.valueOf(count).toCharArray()) {
-                    chars[j++] = c;
-                }
+            if(count > 1){
+               for(char c : String.valueOf(count).toCharArray()){
+                 chars[i++] = c;
+               }
             }
+            
         }
 
-        return j;  // Return the new length
+        return i;
     }
 }

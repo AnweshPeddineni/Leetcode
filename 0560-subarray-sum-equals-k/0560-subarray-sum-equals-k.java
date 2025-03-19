@@ -1,22 +1,22 @@
-import java.util.*;
-
 class Solution {
     public int subarraySum(int[] nums, int k) {
-        Map<Integer, Integer> prefixSumCount = new HashMap<>();
-        prefixSumCount.put(0, 1); // To handle cases where prefixSum itself equals k
+        
+        Map<Integer, Integer> map = new HashMap<>();
 
-        int currentSum = 0, result = 0;
+        int result = 0;
+        
+        int prefSum = 0;
 
-        for (int num : nums) {
-            currentSum += num;
+        map.put(0,1);
 
-            // Check how many times (currentSum - k) has appeared before
-            if (prefixSumCount.containsKey(currentSum - k)) {
-                result += prefixSumCount.get(currentSum - k);
+        for(int i=0; i<nums.length; i++){
+            prefSum += nums[i];  
+
+            if(map.containsKey(prefSum-k)){
+              result += map.get(prefSum-k);
             }
 
-            // Store the prefix sum count
-            prefixSumCount.put(currentSum, prefixSumCount.getOrDefault(currentSum, 0) + 1);
+             map.put(prefSum, map.getOrDefault(prefSum,0)+1);
         }
 
         return result;

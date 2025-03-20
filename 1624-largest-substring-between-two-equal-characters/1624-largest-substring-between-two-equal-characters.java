@@ -1,22 +1,25 @@
 class Solution {
     public int maxLengthBetweenEqualCharacters(String s) {
-        
-        Map<Character,Integer> map = new HashMap<>();
-
         int maxLength = -1;
-
-        for(int i=0; i<s.length(); i++){
-            if (map.containsKey(s.charAt(i))) {
-                maxLength = Math.max(maxLength, i - map.get(s.charAt(i)) - 1);
+        int[] firstIndex = new int[26]; 
+        
+        for (int i = 0; i < 26; i++) {
+            firstIndex[i] = -1; 
+        }
+        
+        for (int i = 0; i < s.length(); i++) {
+            int charIndex = s.charAt(i) - 'a';
+            
+            if (firstIndex[charIndex] == -1) {
+                firstIndex[charIndex] = i; 
             } else {
-                map.put(s.charAt(i), i);
+                maxLength = Math.max(maxLength, i - firstIndex[charIndex] - 1);
             }
         }
-
+        
         return maxLength;
     }
 }
-
 //             i
 // Input: s = "abcaxdzca"
 //                j

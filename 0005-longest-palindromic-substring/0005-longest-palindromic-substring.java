@@ -1,46 +1,31 @@
-class Solution {
+public class Solution {
     public String longestPalindrome(String s) {
-        
-        int i = 0;
-        int j = 0;
+        if (s.length() <= 1) {
+            return s;
+        }
 
-        String result = "";
+        String maxStr = s.substring(0, 1);
 
-        while (i < s.length() && j < s.length()) {
+        for (int i = 0; i < s.length() - 1; i++) {
+            String odd = expandFromCenter(s, i, i);
+            String even = expandFromCenter(s, i, i + 1);
 
-            // Check if s[i...j] is a palindrome
-            if (checkPalindrome(s, i, j)) {
-                String currResult = s.substring(i, j + 1);
-
-                // Update result if we found a longer palindrome
-                if (currResult.length() > result.length()) {
-                    result = currResult;
-                }
+            if (odd.length() > maxStr.length()) {
+                maxStr = odd;
             }
-
-            // Move the `j` pointer to explore longer substrings
-            j++;
-
-            // If `j` reaches the end and no valid palindrome is found,
-            // reset `i` to the next index and start over.
-            if (j == s.length()) {
-                i++;
-                j = i; // Start j again from i
+            if (even.length() > maxStr.length()) {
+                maxStr = even;
             }
         }
 
-        return result;
+        return maxStr;
     }
 
-    // Palindrome checking function
-    public boolean checkPalindrome(String s, int i, int j) {
-        while (i < j) {
-            if (s.charAt(i) != s.charAt(j)) {
-                return false; // Found mismatch, not a palindrome
-            }
-            i++;
-            j--;
+    private String expandFromCenter(String s, int left, int right) {
+        while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
+            left--;
+            right++;
         }
-        return true; // All characters matched, it's a palindrome
+        return s.substring(left + 1, right);
     }
 }

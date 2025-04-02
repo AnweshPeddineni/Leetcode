@@ -1,43 +1,46 @@
 class Solution {
     public int longestSubarray(int[] nums, int limit) {
         
+        Deque<Integer> minQueue = new LinkedList<>(); //to save the smallest in the front
+        Deque<Integer> maxQueue = new LinkedList<>(); //to save the largest in the front
+
         int left = 0;
         int right = 0;
 
-        int max = 0;
-        int min = 0;
-
-        PriorityQueue<Integer> minHeap = new PriorityQueue<>((a,b)->(a-b));
-        PriorityQueue<Integer> maxHeap = new PriorityQueue<>((a,b)->(b-a));
-
-        int subArraySize = 0;
+        int maxSize = 0;
 
         while(right < nums.length){
-           
-           minHeap.offer(nums[right]);
-           maxHeap.offer(nums[right]);
+            while(!minQueue.isEmpty() && minQueue.peekLast() > nums[right]){
+                minQueue.pollLast();
+            }
+            minQueue.offerLast(nums[right]);
 
-           max = maxHeap.peek();
-           min = minHeap.peek();
+            while(!maxQueue.isEmpty() && maxQueue.peekLast() < nums[right]){
+                maxQueue.pollLast();
+            }
+            maxQueue.offerLast(nums[right]);
 
-           while(max - min > limit){
-              if(minHeap.peek() == nums[left]){
-                 left++;
-                 minHeap.poll();
-                 min = minHeap.peek();
-              }
+            
+            while(maxQueue.peekFirst() - minQueue.peekFirst() > limit){
+                if(maxQueue.peekFirst() == nums[left]){
+                   maxQueue.pollFirst();
+                }
 
-              if(minHeap.peek() == nums[left]){
+                if(minQueue.peekFirst() == nums[left]){
+                   minQueue.pollFirst();
+                }
+
                 left++;
-                maxHeap.poll();
-                max = maxHeap.peek();
-              }
-           }
+            }
 
-           subArraySize = Math.max(subArraySize, right-left+1);
-           right++;
+            int currSize = right-left+1;
+
+            maxSize = Math.max(maxSize, currSize);
+
+            right++;
         }
 
-        return subArraySize;
+        return maxSize;
+
     }
 }

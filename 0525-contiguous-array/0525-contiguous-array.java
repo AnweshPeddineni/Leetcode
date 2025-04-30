@@ -28,3 +28,19 @@ class Solution {
         return maxLength;
     }
 }
+
+// prefSum        0   -1-2-3-2-1 0  -->key
+// index         (-1)  0 1 2 3 4 5  -->value
+// Input: nums =      [0,0,0,1,1,1] maxLen = 5 - (-1) = 6
+
+
+// prefSum        0   -1 0 1 2 3 4 3 2 1
+//               (-1)
+// Input: nums =      [0,1,1,1,1,1,0,0,0]
+
+
+// prefSum       0   -1 0-1-2-1 0
+// index        (-1)  0 1 2 3 4 5
+// Input: nums =     [0,1,0,0,1,1]
+
+          

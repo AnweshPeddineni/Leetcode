@@ -1,25 +1,22 @@
 class Solution {
     public int numberOfSubstrings(String s) {
+        int[] count = new int[3];  // To count 'a', 'b', 'c'
+        int left = 0, result = 0;
 
-        int[] freq = new int[3];
+        for (int right = 0; right < s.length(); right++) {
+            // Update count for current character
+            count[s.charAt(right) - 'a']++;
 
-        int n = s.length();
+            // While window is valid (contains a, b, c), move left to shrink
+            while (count[0] > 0 && count[1] > 0 && count[2] > 0) {
+                // If window [left...right] is valid, then all substrings
+                // from left to end are also valid
+                result += s.length() - right;
 
-        int left = 0;
-
-        int result = 0;
-
-        for(int right=0; right<n; right++){
-            char c = s.charAt(right);
-
-            freq[c-'a']++;
-
-            while(freq[0]>0 && freq[1]>0 && freq[2]>0){
-               result += s.length()-right;
-               freq[s.charAt(left)-'a']--;
-               left++;
+                // Shrink the window from left
+                count[s.charAt(left) - 'a']--;
+                left++;
             }
-
         }
 
         return result;

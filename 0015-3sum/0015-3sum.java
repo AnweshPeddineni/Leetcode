@@ -1,46 +1,44 @@
 class Solution {
     public List<List<Integer>> threeSum(int[] nums) {
+    List<List<Integer>> result = new ArrayList<>();
+    if (nums == null || nums.length < 3) return result;
 
-        // Input: nums = [-1,0,1,2,-1,-4]
-        //            i 
-        // sorted = [-4,-1,-1,0,1,2]
-        //               j       
-        //                        k
+    Arrays.sort(nums);
+    int n = nums.length;
 
-        // Output: [[-1,-1,2],[-1,0,1]]
+    for (int i = 0; i < n - 2; i++) {
+        // **I will skip duplicate anchors to avoid duplicate triplets**
+        if (i > 0 && nums[i] == nums[i - 1]) continue;
 
-        Arrays.sort(nums);
+        // **Optional pruning: if the smallest anchor is > 0, no solution ahead**
+        if (nums[i] > 0) break;
 
-        HashSet<List<Integer>> result = new HashSet<>();
- 
-        for(int i=0; i<nums.length-2; i++){
-           int j = i+1;
-           int k = nums.length-1;
-         
-           while(j<k){
-                // if(nums[k-1] == nums[k]){
-                //     k--;
-                // }
-                // if(nums[j+1] == nums[j]){
-                //     j++;
-                // }
+        int l = i + 1, r = n - 1;
 
-                if(nums[j] + nums[k] + nums[i] == 0){
-                    result.add(Arrays.asList(nums[i], nums[j], nums[k]));
-                    j++;
-                    k--;
-                }else if(nums[j] + nums[k] + nums[i] > 0){
-                    k--;
-                }else{
-                    j++;
-                }   
-           }
+        while (l < r) {
+            int sum = nums[i] + nums[l] + nums[r];
 
+            if (sum == 0) {
+                // **I will add the triplet and then skip duplicates on both sides**
+                result.add(Arrays.asList(nums[i], nums[l], nums[r]));
+                l++;
+                r--;
+
+                // **Skip left duplicates**
+                while (l < r && nums[l] == nums[l - 1]) l++;
+                // **Skip right duplicates**
+                while (l < r && nums[r] == nums[r + 1]) r--;
+
+            } else if (sum < 0) {
+                // **I will increase sum by moving left pointer right**
+                l++;
+            } else {
+                // **I will decrease sum by moving right pointer left**
+                r--;
+            }
         }
-
-        ArrayList<List<Integer>> resList = new ArrayList<>(result);
-
-        return resList;
-        
     }
+    return result;
+}
+
 }

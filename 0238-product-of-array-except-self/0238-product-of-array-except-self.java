@@ -4,14 +4,18 @@ class Solution {
         int[] prefixProd = new int[nums.length];
         int[] suffixProd = new int[nums.length];
 
-        prefixProd[0] = 1;
+        int pref = 1;
+        prefixProd[0] = pref;
         for(int i=1; i<nums.length; i++){
-            prefixProd[i] = prefixProd[i-1]*nums[i-1];
+            pref *= nums[i-1];
+            prefixProd[i] = pref;
         }
-
-        suffixProd[nums.length-1] = 1;
+        
+        int suff = 1;
+        suffixProd[nums.length-1] = suff;
         for(int i=nums.length-2; i>=0; i--){
-            suffixProd[i] = suffixProd[i+1]*nums[i+1];
+            suff *= nums[i+1];
+            suffixProd[i] = suff;
         }
 
         int[] result = new int[nums.length];

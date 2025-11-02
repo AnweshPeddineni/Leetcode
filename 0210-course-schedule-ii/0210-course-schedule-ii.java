@@ -1,41 +1,54 @@
-
 class Solution {
     public int[] findOrder(int numCourses, int[][] prerequisites) {
-        List<List<Integer>> graph = new ArrayList<>();
-        int[] inDegree = new int[numCourses];
-        int[] order = new int[numCourses];
+       int[] indegree = new int[numCourses];
 
-        // Step 1: Build graph and in-degree array
-        for (int i = 0; i < numCourses; i++) {
-            graph.add(new ArrayList<>());
-        }
-        for (int[] prereq : prerequisites) {
-            graph.get(prereq[1]).add(prereq[0]);
-            inDegree[prereq[0]]++;
+        List<List<Integer>> adjList = new ArrayList<>();
+
+        int[] result = new int[numCourses];
+
+        for(int i=0; i<numCourses; i++){
+            adjList.add(new ArrayList<>());
         }
 
-        // Step 2: Start with nodes having in-degree == 0
+        for(int i=0; i<prerequisites.length; i++){
+            adjList.get(prerequisites[i][1]).add(prerequisites[i][0]);
+            indegree[prerequisites[i][0]]++;
+        }
+
         Queue<Integer> queue = new LinkedList<>();
-        for (int i = 0; i < numCourses; i++) {
-            if (inDegree[i] == 0) {
+
+        int next = 0;
+        
+        for(int i=0; i<numCourses; i++){
+            if(indegree[i] == 0){
                 queue.offer(i);
+                result[next] = i;
+                next++;
             }
         }
 
-        // Step 3: Process courses using BFS
-        int index = 0;
-        while (!queue.isEmpty()) {
-            int course = queue.poll();
-            order[index++] = course;
-            for (int neighbor : graph.get(course)) {
-                inDegree[neighbor]--;
-                if (inDegree[neighbor] == 0) {
-                    queue.offer(neighbor);
+        int visited = 0;
+
+        while(!queue.isEmpty()){
+            for(int i=0; i<queue.size(); i++){
+                int currCourse = queue.poll();
+                visited++;
+                for(int neighbor : adjList.get(currCourse)){
+                    if(indegree[neighbor] > 0){
+                        indegree[neighbor]--;
+                        if(indegree[neighbor] == 0){
+                            queue.add(neighbor);
+                            result[next] = neighbor;
+                            next++;
+                        }
+                    }
                 }
-            }
+            } 
         }
-
-        // Step 4: Return the result
-        return index == numCourses ? order : new int[0];
+        if(visited == numCourses){
+            return result;
+        }else{
+            return new int[0];
+        }
     }
 }

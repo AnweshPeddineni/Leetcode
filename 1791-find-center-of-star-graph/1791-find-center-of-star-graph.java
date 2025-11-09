@@ -1,17 +1,22 @@
 class Solution {
     public int findCenter(int[][] edges) {
-        
-        HashSet<Integer> set = new HashSet<>();
+        int a = edges[0][0];
+        int b = edges[0][1];
+        int c = edges[1][0];
+        int d = edges[1][1];
 
-        for(int i=0; i<edges.length; i++){
+        Set<Integer> set = new HashSet<>();
+        set.add(a);
+        set.add(b);
 
-            if(set.contains(edges[i][0])) return  edges[i][0];
-            if(set.contains(edges[i][1])) return  edges[i][1];
-
-            set.add(edges[i][0]);
-            set.add(edges[i][1]);
-        }
+        if(set.contains(c)) return c;
+        if(set.contains(d)) return d;
 
         return -1;
     }
 }
+
+// Undirected graph
+
+//Input: edges = [[1,2],[2,3],[4,2]]
+// Output: 2

@@ -1,21 +1,27 @@
 class Solution {
     public int findJudge(int n, int[][] trust) {
-        int[] inDegree = new int[n + 1];
-        int[] outDegree = new int[n + 1];
+        
+        List<List<Integer>> adjList = new ArrayList<>();
+        int[] indegree = new int[n+1];
 
-        for (int[] t : trust) {
-            int a = t[0]; // Person who trusts
-            int b = t[1]; // Person who is trusted
-            outDegree[a]++;
-            inDegree[b]++;
+        for(int i=0; i<=n; i++){
+            adjList.add(new ArrayList<>());
         }
 
-        for (int i = 1; i <= n; i++) {
-            if (inDegree[i] == n - 1 && outDegree[i] == 0) {
-                return i; // Judge found
-            }
+        for(int i=0; i<trust.length; i++){
+             adjList.get(trust[i][0]).add(trust[i][1]);
+             indegree[trust[i][1]]++;
         }
 
-        return -1; // No judge found
+        int result = -1;
+
+        for(int i=0; i<=n; i++){
+           if(indegree[i] == n-1 && adjList.get(i).isEmpty()) result = i;
+        }
+
+        return result;
     }
 }
+
+//Input: n = 3, trust = [[1,3],[2,3],[3,1]]
+//Output: -1

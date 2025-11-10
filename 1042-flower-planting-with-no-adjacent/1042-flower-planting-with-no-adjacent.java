@@ -1,38 +1,43 @@
 class Solution {
+    public List<List<Integer>> adjList = new ArrayList<>();
+
     public int[] gardenNoAdj(int n, int[][] paths) {
-        List<List<Integer>> adj = getAdjacencyList(paths, n);
-        int[] result = new int[n];
-        solve(1, adj, result, n);
-        return result;
-    }
+        for(int i=0; i<=n; i++){
+            adjList.add(new ArrayList<>());
+        }
 
-    private boolean solve(int node, List<List<Integer>> adj, int[] result, int n) {
-        if (node == n + 1) return true;
+        for(int i=0; i<paths.length; i++){
+            adjList.get(paths[i][0]).add(paths[i][1]);
+            adjList.get(paths[i][1]).add(paths[i][0]);
+        }
 
-        for (int col = 1; col <= 4; col++) {
-            if (isPossible(node, col, adj, result)) {
-                result[node - 1] = col;
-                if (solve(node + 1, adj, result, n)) return true;
-                result[node - 1] = 0;
+        int[] visOrColored = new int[n+1];
+
+        for(int i=0; i<=n; i++){
+            if(visOrColored[i] == 0){
+                flowerIt(visOrColored, i);
             }
         }
-        return false;
+
+        return Arrays.copyOfRange(visOrColored, 1, n+1);
     }
 
-    private boolean isPossible(int node, int col, List<List<Integer>> adj, int[] result) {
-        for (int it : adj.get(node)) {
-            if (result[it - 1] == col) return false;
-        }
-        return true;
-    }
+    public void flowerIt(int[] visOrColored, int node){
+        Queue<Integer> queue = new LinkedList<>();
 
-    private List<List<Integer>> getAdjacencyList(int[][] paths, int n) {
-        List<List<Integer>> adj = new ArrayList<>();
-        for (int i = 0; i <= n; i++) adj.add(new ArrayList<>());
-        for (int[] path : paths) {
-            adj.get(path[0]).add(path[1]);
-            adj.get(path[1]).add(path[0]);
+        queue.add(node);
+        visOrColored[node] = 1;
+
+        while(!queue.isEmpty()){
+            int curr = queue.poll();
+            int color = visOrColored[curr];
+
+            for(int v : adjList.get(curr)){
+                if(visOrColored[v] == 0 || visOrColored[v] == color){
+                    visOrColored[v] = color == 4? 1 : color+1;
+                    queue.add(v);
+                }
+            }
         }
-        return adj;
     }
 }

@@ -1,25 +1,27 @@
+
+
 class Solution {
     public int[][] floodFill(int[][] image, int sr, int sc, int color) {
+        int R = image.length, C = image[0].length;
+        int before = image[sr][sc];
+        if (before == color) return image; // nothing to do
+
+        ArrayDeque<int[]> q = new ArrayDeque<>();
+        image[sr][sc] = color; // mark as visited by recoloring
+        q.offer(new int[]{sr, sc});
         
-        int originalColor = image[sr][sc];
-        if(originalColor != color) {
-            dfs(image, sr, sc, originalColor, color);
+        int[][] dirs = {{1,0},{-1,0},{0,1},{0,-1}};
+        while (!q.isEmpty()) {
+            int[] cur = q.poll();
+            int r = cur[0], c = cur[1];
+            for (int[] d : dirs) {
+                int nr = r + d[0], nc = c + d[1];
+                if (nr >= 0 && nr < R && nc >= 0 && nc < C && image[nr][nc] == before) {
+                    image[nr][nc] = color;   // visit & recolor
+                    q.offer(new int[]{nr, nc});
+                }
+            }
         }
         return image;
-    }
-
-    private void dfs(int image[][], int x, int y, int originalColor, int newColor) {
-
-        if(x < 0 || x >= image.length || y < 0 || y >= image[0].length || image[x][y] != originalColor) {
-            return;
-        }
-
-        image[x][y] = newColor;
-
-        dfs(image, x + 1, y, originalColor, newColor);
-        dfs(image, x - 1, y, originalColor, newColor);
-        dfs(image, x, y + 1, originalColor, newColor);
-        dfs(image, x , y - 1, originalColor, newColor);
-
     }
 }

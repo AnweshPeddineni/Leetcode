@@ -1,44 +1,41 @@
+
+
 class Solution {
-    public List<List<Integer>> result;
-
+    /**
+     * Generates all possible combinations of k numbers chosen from the range [1, n].
+     *
+     * @param n The upper bound of the range of numbers.
+     * @param k The size of each combination.
+     * @return A list of all possible combinations.
+     */
     public List<List<Integer>> combine(int n, int k) {
-        result = new ArrayList<>();
-        List<Integer> combination = new ArrayList<>();;
-        dfs(1, combination, n, k);
-        return result;
+        List<List<Integer>> allCombinations = new ArrayList<>(); // To store all valid combinations
+        List<Integer> currentCombination = new ArrayList<>(); // To store the current combination being built
+        generateCombinations(1, n, k, currentCombination, allCombinations); // Start from number 1
+        return allCombinations;
     }
-    
-    public void dfs(int start,
-                    List<Integer> comb,
-                    int n,
-                    int k){
 
-        if(comb.size() > k) return;
-
-        if(comb.size()==k){
-            result.add(new ArrayList<>(comb));
+    /**
+     * Helper method to perform backtracking and generate combinations.
+     *
+     * @param start The starting number for the current recursion.
+     * @param n The upper bound of the range of numbers.
+     * @param k The number of elements to choose.
+     * @param current The current combination being built.
+     * @param allCombinations The list to store all valid combinations.
+     */
+    private void generateCombinations(int start, int n, int k, List<Integer> current, List<List<Integer>> allCombinations) {
+        // Base case: If the current combination has reached the desired size, add it to the result list
+        if (current.size() == k) {
+            allCombinations.add(new ArrayList<>(current)); // Make a deep copy to avoid reference issues
             return;
         }
 
-        // if (start > n) {
-        //     return;
-        // }
-
-        for(int i=start; i<=n; i++){
-           comb.add(i);
-           dfs(i+1, comb, n, k);
-           comb.remove(comb.size()-1);
+        // Iterate through the possible candidates for the next element in the combination
+        for (int number = start; number <= n; number++) {
+            current.add(number); // Choose the current number
+            generateCombinations(number + 1, n, k, current, allCombinations); // Recurse with the next number
+            current.remove(current.size() - 1); // Backtrack: remove the last added number to explore new possibilities
         }
     }
 }
-
-
-// n = 4, k = 2 (1 to n)
-
-// arr[] = [1,2,3,4]
-// all k size combinations -> [1,2],[1,3],[1,4],[2,3],[2,4],[3,4]
-
-// dfs(start pointer, curr combination, k, n)
-
-// recursive back tracking -> to produe all combinations n*(2)^k
-// space -> n*2^k for result and k for recursion stack
